@@ -62,7 +62,7 @@ jobs:
 
       - name: Pull & Restart (uses docker-compose.yml in repo root)
         run: |
-          # If your compose references images with :latest, this will pull latest tags.
-          # If your compose references specific tags, replace them or generate a compose file before pulling.
+          # If  compose references images with :latest, this will pull latest tags.
+          # If  compose references specific tags, replace them or generate a compose file before pulling.
           docker compose pull
           docker compose up -d --remove-orphans
