@@ -13,20 +13,22 @@ services:
       - backend
     networks:
       - mean-network
+    restart: always
 
   frontend:
     build:
-      context: lavanyajc/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend-app
     expose:
       - "80"
     networks:
       - mean-network
+    restart: always
 
   backend:
     build:
-      context: lavanyajc/backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: backend-app
     environment:
@@ -38,6 +40,7 @@ services:
       - mongodb
     networks:
       - mean-network
+    restart: always
 
   mongodb:
     image: mongo:6
@@ -48,9 +51,10 @@ services:
       - "27017"
     networks:
       - mean-network
+    restart: always
 
 networks:
   mean-network:
 
 volumes:
-  mongo-data: 
+  mongo-data:
