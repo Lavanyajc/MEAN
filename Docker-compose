@@ -16,7 +16,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: lavanyajc/frontend
       dockerfile: Dockerfile
     container_name: frontend-app
     expose:
@@ -26,7 +26,7 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: lavanyajc/backend
       dockerfile: Dockerfile
     container_name: backend-app
     environment:
