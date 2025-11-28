@@ -60,9 +60,31 @@ jobs:
           username: lavanyajc
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull & Restart (uses docker-compose.yml in repo root)
+      - name: Pull latest images and restart containers
         run: |
-          # If your docker-compose.yml references images by :latest, this will pull latest tags.
-          # If it references specific tags, you may want to template or replace them before pulling.
-          docker compose pull
-          docker compose up -d --remove-orphans
+          set -euo pipefail
+
+          # images to pull (we pull latest from Docker Hub)
+          FRONT=lavanyajc/repo1-frontend:latest
+          BACK=lavanyajc/repo1-backend:latest
+
+          echo "Pulling images from Docker Hub: $FRONT and $BACK"
+          docker pull "$FRONT"
+          docker pull "$BACK"
+
+          # create an override file so docker-compose uses the pulled images explicitly
+          cat > docker-compose.override.yml <<EOF
+          services:
+            frontend:
+              image: ${FRONT}
+            backend:
+              image: ${BACK}
+          EOF
+
+          # pull via compose (ensures dependencies) and restart the stack
+          docker compose -f docker-compose.yml -f docker-compose.override.yml pull
+          docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
+
+      - name: Show running containers
+        run: |
+          docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
